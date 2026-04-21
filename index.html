@@ -796,6 +796,7 @@ footer ul li:hover{color:#fff}
 <!-- PAYHERE FORM -->
 <form id="payhere-form" method="post" action="https://sandbox.payhere.lk/pay/checkout" style="display:none;">
   <input type="hidden" name="merchant_id" value="1235313">
+  <input type="hidden" name="hash" id="ph-hash">
   <input type="hidden" name="return_url" value="https://yourdomain.com/success.html">
   <input type="hidden" name="cancel_url" value="https://yourdomain.com/cancel.html">
   <input type="hidden" name="notify_url" value="https://yourdomain.com/notify">
@@ -867,8 +868,82 @@ function applyPromo(){const code=document.getElementById('promo-input').value.tr
 
 function selectPayMethod(el){document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('active'));el.classList.add('active');selectedPaymentMethod=el.dataset.method||'payhere';document.getElementById('card-payment-fields').style.display=(selectedPaymentMethod==='cod'||selectedPaymentMethod==='genie')?'none':'block';}
 
-function placeOrder(){const fn=document.getElementById('co-first-name')?.value.trim();const ln=document.getElementById('co-last-name')?.value.trim();const em=document.getElementById('co-email')?.value.trim();const ph=document.getElementById('co-phone')?.value.trim();const ad=document.getElementById('co-address')?.value.trim();const cy=document.getElementById('co-city')?.value.trim();const pr=document.getElementById('co-province')?.value.trim();if(!fn||!ln||!em||!ph||!ad||!cy||!pr){alert(currentLang==='si'?'කරුණාකර සියලු delivery details පුරවන්න.':'Please fill all delivery details.');return;}if(cart.length===0){alert(currentLang==='si'?'Cart හිස්.':'Cart is empty.');return;}if(selectedPaymentMethod!=='payhere'){const num='DRV-'+String(Math.floor(10000+Math.random()*90000));document.getElementById('order-number').textContent='Order #'+num;cart=[];promoApplied=false;updateCartUI();showPage('success');return;}const totalText=document.getElementById('co-total').textContent;const amount=totalText.replace(/[^0-9.]/g,'');const itemNames=cart.map(item=>`${currentLang==='si'?item.nameSi:item.name} x${item.qty}`).join(', ');document.getElementById('ph-order-id').value='DRV-'+Date.now();document.getElementById('ph-amount').value=amount;document.getElementById('ph-items').value=itemNames||'Drovex Order';document.getElementById('ph-first-name').value=fn;document.getElementById('ph-last-name').value=ln;document.getElementById('ph-email').value=em;document.getElementById('ph-phone').value=ph;document.getElementById('ph-address').value=ad+', '+pr;document.getElementById('ph-city').value=cy;document.getElementById('payhere-form').submit();}
+async function placeOrder() {
+  const fn = document.getElementById('co-first-name')?.value.trim();
+  const ln = document.getElementById('co-last-name')?.value.trim();
+  const em = document.getElementById('co-email')?.value.trim();
+  const ph = document.getElementById('co-phone')?.value.trim();
+  const ad = document.getElementById('co-address')?.value.trim();
+  const cy = document.getElementById('co-city')?.value.trim();
+  const pr = document.getElementById('co-province')?.value.trim();
 
+  if (!fn || !ln || !em || !ph || !ad || !cy || !pr) {
+    alert(currentLang === 'si'
+      ? 'කරුණාකර සියලු delivery details පුරවන්න.'
+      : 'Please fill all delivery details.');
+    return;
+  }
+
+  if (cart.length === 0) {
+    alert(currentLang === 'si' ? 'Cart හිස්.' : 'Cart is empty.');
+    return;
+  }
+
+  if (selectedPaymentMethod !== 'payhere') {
+    const num = 'DRV-' + String(Math.floor(10000 + Math.random() * 90000));
+    document.getElementById('order-number').textContent = 'Order #' + num;
+    cart = [];
+    promoApplied = false;
+    updateCartUI();
+    showPage('success');
+    return;
+  }
+
+  const totalText = document.getElementById('co-total').textContent;
+  const amount = parseFloat(totalText.replace(/[^0-9.]/g, ''));
+
+  if (!amount || amount <= 0) {
+    alert(currentLang === 'si' ? 'Total amount එක වැරදියි.' : 'Invalid total amount.');
+    return;
+  }
+
+  const orderId = 'DRV-' + Date.now();
+  const itemNames = cart.map(item => `${currentLang === 'si' ? item.nameSi : item.name} x${item.qty}`).join(', ');
+
+  try {
+    const res = await fetch('https://drovexbackend.rf.gd/generate_hash.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        order_id: orderId,
+        amount: amount.toFixed(2),
+        currency: 'LKR'
+      })
+    });
+
+    const data = await res.json();
+
+    document.getElementById('ph-order-id').value = orderId;
+    document.getElementById('ph-amount').value = data.amount;
+    document.getElementById('ph-hash').value = data.hash;
+    document.getElementById('ph-items').value = itemNames || 'Drovex Order';
+
+    document.getElementById('ph-first-name').value = fn;
+    document.getElementById('ph-last-name').value = ln;
+    document.getElementById('ph-email').value = em;
+    document.getElementById('ph-phone').value = ph;
+    document.getElementById('ph-address').value = ad + ', ' + pr;
+    document.getElementById('ph-city').value = cy;
+
+    document.getElementById('payhere-form').submit();
+
+  } catch (err) {
+    console.error(err);
+    alert(currentLang === 'si'
+      ? 'Payment server එකට connect වෙන්න බැරිවුණා.'
+      : 'Error connecting to payment server.');
+  }
+}
 function copyCode(el){navigator.clipboard&&navigator.clipboard.writeText('DROVEX10');const orig=el.textContent;el.textContent=currentLang==='si'?'Copy විය!':'Copied!';setTimeout(()=>el.textContent=orig,1500);}
 
 function submitContact(){alert(currentLang==='si'?'ඔබේ message යවන ලදී! ස්තූතියි.':'Message sent! Thank you.');}
