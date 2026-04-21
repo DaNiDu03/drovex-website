@@ -525,6 +525,7 @@ footer ul li:hover{color:#fff}
 </div>
 
 <!-- ========== CHECKOUT PAGE ========== -->
+<!-- ========== CHECKOUT PAGE ========== -->
 <div id="page-checkout" class="page">
   <div style="padding:2rem 3rem .5rem;border-bottom:.5px solid #e0ddd8">
     <h1 style="font-family:var(--font-head);font-size:2rem;font-weight:400" data-en="Checkout" data-si="Checkout">Checkout</h1>
@@ -535,25 +536,25 @@ footer ul li:hover{color:#fff}
         <div class="checkout-block">
           <h3 data-en="Delivery details" data-si="Delivery විස්තර">Delivery details</h3>
           <div class="form-row">
-            <input type="text" placeholder="First name / මුල් නම"/>
-            <input type="text" placeholder="Last name / අවසාන නම"/>
+            <input type="text" id="co-first-name" placeholder="First name / මුල් නම"/>
+            <input type="text" id="co-last-name" placeholder="Last name / අවසාන නම"/>
           </div>
-          <div class="form-full"><input type="email" placeholder="Email address / ඊමේල්"/></div>
-          <div class="form-full"><input type="tel" placeholder="Phone / දුරකථන අංකය (07X XXX XXXX)"/></div>
-          <div class="form-full"><input type="text" placeholder="Address / ලිපිනය"/></div>
+          <div class="form-full"><input type="email" id="co-email" placeholder="Email address / ඊමේල්"/></div>
+          <div class="form-full"><input type="tel" id="co-phone" placeholder="Phone / දුරකථන අංකය (07X XXX XXXX)"/></div>
+          <div class="form-full"><input type="text" id="co-address" placeholder="Address / ලිපිනය"/></div>
           <div class="form-row">
-            <input type="text" placeholder="City / නගරය"/>
-            <select>
-              <option data-en="Province" data-si="පළාත">Province</option>
-              <option>Western / බස්නාහිර</option>
-              <option>Central / මධ්‍යම</option>
-              <option>Southern / දකුණු</option>
-              <option>Northern / උතුරු</option>
-              <option>Eastern / නැගෙනහිර</option>
-              <option>North Western / වයඹ</option>
-              <option>North Central / උතුරු මැද</option>
-              <option>Uva / උව</option>
-              <option>Sabaragamuwa / සබරගමුව</option>
+            <input type="text" id="co-city" placeholder="City / නගරය"/>
+            <select id="co-province">
+              <option value="" data-en="Province" data-si="පළාත">Province</option>
+              <option value="Western">Western / බස්නාහිර</option>
+              <option value="Central">Central / මධ්‍යම</option>
+              <option value="Southern">Southern / දකුණු</option>
+              <option value="Northern">Northern / උතුරු</option>
+              <option value="Eastern">Eastern / නැගෙනහිර</option>
+              <option value="North Western">North Western / වයඹ</option>
+              <option value="North Central">North Central / උතුරු මැද</option>
+              <option value="Uva">Uva / උව</option>
+              <option value="Sabaragamuwa">Sabaragamuwa / සබරගමුව</option>
             </select>
           </div>
         </div>
@@ -561,14 +562,15 @@ footer ul li:hover{color:#fff}
         <div class="checkout-block">
           <h3 data-en="Payment method" data-si="ගෙවීමේ ක්‍රමය">Payment method</h3>
           <div class="pay-methods">
-            <div class="pay-method active" onclick="selectPayMethod(this)">
+            <div class="pay-method active" data-method="payhere" onclick="selectPayMethod(this)">
               <div class="pay-logo-svg">
                 <svg viewBox="0 0 60 20" width="60"><rect width="60" height="20" rx="3" fill="#0F4C81"/><text x="6" y="14" font-size="9" font-weight="700" fill="#fff" font-family="Arial">PayHere</text></svg>
               </div>
               <div class="pay-method-name">PayHere</div>
               <div class="pay-method-note" data-en="All LK cards" data-si="සියලු LK cards">All LK cards</div>
             </div>
-            <div class="pay-method" onclick="selectPayMethod(this)">
+
+            <div class="pay-method" data-method="card" onclick="selectPayMethod(this)">
               <div class="pay-logo-svg">
                 <svg viewBox="0 0 50 20" width="50">
                   <circle cx="18" cy="10" r="9" fill="#EB001B" opacity=".9"/>
@@ -578,12 +580,14 @@ footer ul li:hover{color:#fff}
               <div class="pay-method-name">Visa / MC</div>
               <div class="pay-method-note" data-en="Direct card" data-si="Direct card">Direct card</div>
             </div>
-            <div class="pay-method" onclick="selectPayMethod(this)">
+
+            <div class="pay-method" data-method="cod" onclick="selectPayMethod(this)">
               <div class="pay-logo-svg" style="font-size:22px">🚗</div>
               <div class="pay-method-name" data-en="Cash on Delivery" data-si="Cash on Delivery">Cash on Delivery</div>
               <div class="pay-method-note" data-en="Pay at door" data-si="Door-step ගෙවීම">Pay at door</div>
             </div>
-            <div class="pay-method" onclick="selectPayMethod(this)">
+
+            <div class="pay-method" data-method="genie" onclick="selectPayMethod(this)">
               <div class="pay-logo-svg">
                 <svg viewBox="0 0 60 20" width="60"><rect width="60" height="20" rx="3" fill="#6B3FA0"/><text x="5" y="14" font-size="9" font-weight="700" fill="#fff" font-family="Arial">Genie/eZ</text></svg>
               </div>
@@ -591,6 +595,7 @@ footer ul li:hover{color:#fff}
               <div class="pay-method-note">Dialog / Mobitel</div>
             </div>
           </div>
+
           <div id="card-payment-fields">
             <div class="form-full" style="margin-top:.5rem"><input type="text" placeholder="Card number — 0000 0000 0000 0000"/></div>
             <div class="form-row">
@@ -606,7 +611,7 @@ footer ul li:hover{color:#fff}
         <div id="checkout-items"></div>
         <div class="promo-apply" style="margin-top:1rem">
           <input type="text" placeholder="Promo code / Promo code" id="promo-input"/>
-          <button onclick="applyPromo()" data-en="Apply" data-si="Apply">Apply</button>
+          <button type="button" onclick="applyPromo()" data-en="Apply" data-si="Apply">Apply</button>
         </div>
         <div class="order-totals">
           <div class="total-row"><span data-en="Subtotal" data-si="Sub total">Subtotal</span><span id="co-subtotal">Rs. 0</span></div>
@@ -614,7 +619,7 @@ footer ul li:hover{color:#fff}
           <div class="total-row" id="discount-row" style="display:none;color:#3B6D11"><span data-en="Discount (10%)" data-si="Discount (10%)">Discount (10%)</span><span id="co-discount">-Rs. 0</span></div>
           <div class="total-row grand"><span data-en="Total" data-si="මුළු එකතුව">Total</span><strong id="co-total">Rs. 350</strong></div>
         </div>
-        <button class="place-order-btn" onclick="placeOrder()" data-en="Place Order" data-si="Order කරන්න">Place Order</button>
+        <button type="button" class="place-order-btn" onclick="placeOrder()" data-en="Place Order" data-si="Order කරන්න">Place Order</button>
         <div class="secure-note">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           SSL encrypted · PayHere certified
@@ -1036,6 +1041,87 @@ window.addEventListener('scroll',()=>{
 
 // INIT
 initProducts();
+</script>
+<form id="payhere-form" method="post" action="https://sandbox.payhere.lk/pay/checkout" style="display:none;">
+  <input type="hidden" name="merchant_id" value="1235313">
+
+  <input type="hidden" name="return_url" value="https://yourdomain.com/success.html">
+  <input type="hidden" name="cancel_url" value="https://yourdomain.com/cancel.html">
+  <input type="hidden" name="notify_url" value="https://yourdomain.com/notify">
+
+  <input type="hidden" name="order_id" id="ph-order-id">
+  <input type="hidden" name="items" id="ph-items" value="Drovex Order">
+  <input type="hidden" name="currency" value="LKR">
+  <input type="hidden" name="amount" id="ph-amount">
+
+  <input type="hidden" name="first_name" id="ph-first-name">
+  <input type="hidden" name="last_name" id="ph-last-name">
+  <input type="hidden" name="email" id="ph-email">
+  <input type="hidden" name="phone" id="ph-phone">
+  <input type="hidden" name="address" id="ph-address">
+  <input type="hidden" name="city" id="ph-city">
+  <input type="hidden" name="country" value="Sri Lanka">
+</form>
+<script>
+  let selectedPaymentMethod = 'payhere';
+
+function selectPayMethod(el) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+
+  selectedPaymentMethod = el.dataset.method || 'payhere';
+
+  document.getElementById('card-payment-fields').style.display =
+    (selectedPaymentMethod === 'cod' || selectedPaymentMethod === 'genie') ? 'none' : 'block';
+}
+
+function placeOrder() {
+  const firstName = document.getElementById('co-first-name')?.value.trim();
+  const lastName = document.getElementById('co-last-name')?.value.trim();
+  const email = document.getElementById('co-email')?.value.trim();
+  const phone = document.getElementById('co-phone')?.value.trim();
+  const address = document.getElementById('co-address')?.value.trim();
+  const city = document.getElementById('co-city')?.value.trim();
+  const province = document.getElementById('co-province')?.value.trim();
+
+  if (!firstName || !lastName || !email || !phone || !address || !city || !province) {
+    alert(currentLang === 'si' ? 'කරුණාකර සියලු delivery details පුරවන්න.' : 'Please fill all delivery details.');
+    return;
+  }
+
+  if (cart.length === 0) {
+    alert(currentLang === 'si' ? 'ඔබගේ cart එක හිස්.' : 'Your cart is empty.');
+    return;
+  }
+
+  if (selectedPaymentMethod !== 'payhere') {
+    alert(currentLang === 'si' ? 'දැනට PayHere payment method එක විතරක් connect කරලා තියෙන්නේ.' : 'Currently only PayHere payment is connected.');
+    return;
+  }
+
+  const totalText = document.getElementById('co-total').textContent;
+  const amount = totalText.replace(/[^0-9.]/g, '');
+
+  if (!amount || Number(amount) <= 0) {
+    alert(currentLang === 'si' ? 'Total amount එක වැරදියි.' : 'Invalid total amount.');
+    return;
+  }
+
+  const itemNames = cart.map(item => `${currentLang==='si' ? item.nameSi : item.name} x${item.qty}`).join(', ');
+
+  document.getElementById('ph-order-id').value = 'DRV-' + Date.now();
+  document.getElementById('ph-amount').value = amount;
+  document.getElementById('ph-items').value = itemNames || 'Drovex Order';
+
+  document.getElementById('ph-first-name').value = firstName;
+  document.getElementById('ph-last-name').value = lastName;
+  document.getElementById('ph-email').value = email;
+  document.getElementById('ph-phone').value = phone;
+  document.getElementById('ph-address').value = address + ', ' + province;
+  document.getElementById('ph-city').value = city;
+
+  document.getElementById('payhere-form').submit();
+}
 </script>
 </body>
 </html>
